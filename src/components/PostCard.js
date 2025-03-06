@@ -30,8 +30,8 @@ const PostCard = ({ post, onLike, onComment, onDelete, onEdit, isDark }) => {
       className={`p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border ${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-teal-100'}`}
     >
       <div className="flex items-center space-x-3 mb-3">
-        <img src={post.user.avatar} alt={post.user.name} className="w-10 h-10 rounded-full shadow-sm" />
-        <span className="font-semibold text-lg">{post.user.name}</span>
+        <img src={post?.user?.avatar} alt={post?.user?.name} className="w-10 h-10 rounded-full shadow-sm" />
+        <span className="font-semibold text-lg">{post?.user?.name}</span>
       </div>
       {isEditing ? (
         <form onSubmit={handleEditSubmit} className="mb-3">
@@ -64,9 +64,9 @@ const PostCard = ({ post, onLike, onComment, onDelete, onEdit, isDark }) => {
           </div>
         </div>
       )}
-      {post.tags.length > 0 && (
+      {post?.tags?.length > 0 && (
         <div className="mt-2 flex space-x-2">
-          {post.tags.map((tag, idx) => (
+          {post?.tags?.map((tag, idx) => (
             <span key={idx} className={`text-sm font-medium px-2 py-1 rounded-full ${isDark ? 'bg-teal-700 text-teal-200' : 'bg-teal-100 text-teal-600'}`}>
               {tag}
             </span>
@@ -93,11 +93,11 @@ const PostCard = ({ post, onLike, onComment, onDelete, onEdit, isDark }) => {
         </button>
         <span className="flex items-center space-x-1">
           <ChatBubbleLeftIcon className="w-5 h-5" />
-          <span>{post.comments.length}</span>
+          <span>{post?.comments?.length}</span>
         </span>
       </div>
       <div className="mt-4">
-        {post.comments.map((cmt, idx) => (
+        {post?.comments?.map((cmt, idx) => (
           <p key={idx} className={`text-sm p-2 rounded-md mt-1 ${isDark ? 'bg-gray-700 text-gray-200' : 'bg-teal-50 text-gray-600'}`}>{cmt}</p>
         ))}
         <form onSubmit={handleCommentSubmit} className="mt-3 flex space-x-2">
