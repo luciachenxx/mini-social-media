@@ -1,28 +1,22 @@
-// src/components/PostList.js
-import React from 'react';
-import { motion } from 'framer-motion';
-import PostCard from './PostCard';
+import React from "react";
+import PostCard from "./PostCard";
 
-const PostList = ({ posts, onLike, onComment, onDelete, onEdit, isDark }) => {
+const PostList = ({ posts, onLike, onComment, onReply, onDelete, onEdit, isDark }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ staggerChildren: 0.1 }}
-      className="space-y-6"
-    >
-      {posts.map(post => (
+    <div className="space-y-6">
+      {posts.map((post) => (
         <PostCard
           key={post.id}
           post={post}
           onLike={onLike}
           onComment={onComment}
+          onReply={onReply}
           onDelete={onDelete}
           onEdit={onEdit}
           isDark={isDark}
         />
       ))}
-    </motion.div>
+    </div>
   );
 };
 
