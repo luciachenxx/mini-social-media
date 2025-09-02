@@ -322,7 +322,7 @@ const App = () => {
         className={`flex flex-col items-center justify-center h-screen ${isDark ? "bg-gray-900 text-gray-100" : "bg-teal-50 text-gray-800"
           }`}
       >
-        <h1 className="text-4xl font-bold mb-8">Welcome to Social Snap</h1>
+        <h1 className="text-3xl font-bold mb-8">Welcome to Social Snap</h1>
         <button
           onClick={handleAnonymousLogin}
           className="mb-4 bg-teal-500 text-white px-6 py-2 rounded-lg hover:bg-teal-600 transition-all"
@@ -372,7 +372,7 @@ const App = () => {
             className="flex items-center gap-2 p-2 rounded-full bg-teal-500 text-white hover:bg-teal-600 transition-all duration-300 shadow-md"
           >
             <img src={userAvatar} alt="Avatar" className="w-8 h-8 rounded-full" />
-            <span>{userName}</span>
+            <span className="text-sm text-overflow-ellipsis overflow-hidden whitespace-nowrap">{userName}</span>
           </button>
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10">

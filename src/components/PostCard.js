@@ -176,7 +176,15 @@ const PostCard = ({ post, onLike, onComment, onReply, onDelete, onEdit, isDark }
                   className={`flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 ${isDark ? "bg-gray-700 border-gray-600 text-gray-100" : "bg-white border-teal-200 text-gray-800"}`}
                 />
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={() => toggleReplyInput(idx)}
+                  className=" bg-gray-500 bg-opacity-70 text-white px-4 py-1 rounded-lg hover:bg-gray-600 transition-all duration-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => toggleReplyInput(idx)}
                   className="bg-gradient-to-r from-teal-500 to-indigo-500 text-white px-4 py-1 rounded-lg hover:from-teal-600 hover:to-indigo-600 transition-all duration-200"
                 >
                   Send
