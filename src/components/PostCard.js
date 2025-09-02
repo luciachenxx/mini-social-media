@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { TrashIcon, ChatBubbleLeftIcon, PencilIcon } from "@heroicons/react/24/solid";
+import { auth } from "../services/firebase"; // 需要引入 auth 來取得當前用戶
 
 // 時間轉換函數
 const transferTimestamp = (timestamp) => {
@@ -31,6 +32,10 @@ const PostCard = ({ post, onLike, onComment, onReply, onDelete, onEdit, isDark }
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(post.content);
   const [replyInputs, setReplyInputs] = useState({}); // 控制每個留言的回覆輸入框
+
+  // 檢查當前用戶是否已按讚
+  const currentUserId = auth.currentUser?.uid;
+  const isLikedByUser = post.likedBy && currentUserId && post.likedBy.includes(currentUserId);
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
@@ -86,14 +91,14 @@ const PostCard = ({ post, onLike, onComment, onReply, onDelete, onEdit, isDark }
       ) : (
         <div className="flex justify-between items-start">
           <p className="text-lg leading-relaxed">{post.content}</p>
-          <div className="flex space-x-2">
+          {currentUserId === post.user.id && <div className="flex space-x-2">
             <button onClick={() => setIsEditing(true)} className="text-teal-500 hover:text-teal-600 transition-colors">
               <PencilIcon className="w-5 h-5" />
             </button>
             <button onClick={() => onDelete(post.id)} className="text-red-500 hover:text-red-600 transition-colors">
               <TrashIcon className="w-5 h-5" />
             </button>
-          </div>
+          </div>}
         </div>
       )}
       {post?.tags?.length > 0 && (
@@ -116,12 +121,26 @@ const PostCard = ({ post, onLike, onComment, onReply, onDelete, onEdit, isDark }
       <div className="mt-4 flex space-x-6">
         <button
           onClick={() => onLike(post.id)}
-          className="flex items-center space-x-1 hover:text-red-500 transition-colors duration-200"
+          className={`flex items-center space-x-1 transition-all duration-300 transform hover:scale-110 ${
+            isLikedByUser 
+              ? 'text-red-500 hover:text-red-600' 
+              : isDark 
+                ? 'text-gray-100 hover:text-red-500'  // 暗色模式：白色
+                : 'text-gray-700 hover:text-red-500'  // 亮色模式：深灰色
+          }`}
         >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <motion.svg 
+            className="w-5 h-5" 
+            fill="currentColor" 
+            viewBox="0 0 20 20"
+            animate={isLikedByUser ? { scale: [1, 1.2, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
             <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" />
-          </svg>
-          <span>{post.likes}</span>
+          </motion.svg>
+          <span className={`${isLikedByUser ? 'font-semibold' : ''}`}>
+            {post.likes || 0}
+          </span>
         </button>
         <span className="flex items-center space-x-1">
           <ChatBubbleLeftIcon className="w-5 h-5" />

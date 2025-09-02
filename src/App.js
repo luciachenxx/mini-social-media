@@ -17,6 +17,7 @@ import {
   linkWithPopup,
   signOut,
   updateProfile,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
@@ -40,8 +41,10 @@ const App = () => {
       if (user) {
         // 更新用戶資料
         const name = user.displayName || (user.isAnonymous ? "Anonymous" : "User");
-        const avatar =
-          user.photoURL || `https://i.pravatar.cc/40?u=${user.uid || Date.now()}`;
+        const avatarImg = `https://ui-avatars.com/api/?name=${name.charAt(0)}&background=666666&color=fff&size=40`;
+        const avatar = user.isAnonymous 
+        ? avatarImg
+        : (user.photoURL || avatarImg);
         setUserName(name);
         setUserAvatar(avatar);
         localStorage.setItem("userName", name);
@@ -52,6 +55,7 @@ const App = () => {
           collection(db, "posts"),
           (snapshot) => {
             const postsData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            console.log(postsData, 'postsData');
             setPosts(postsData);
             setError(null);
             setLoading(false); // 資料載入完成
@@ -107,6 +111,19 @@ const App = () => {
     }
   };
 
+  // 登入為示範用戶
+  const handleDemoLogin = async () => {
+    try {
+      setLoading(true); // 開始載入
+      await signInWithEmailAndPassword(auth, "demo@example.com", "123456");
+      toast.success("Logged in with Demo User!");
+    } catch (error) {
+      console.error("Demo login error:", error);
+      toast.error("Failed to login with Demo User");
+      setLoading(false);
+    }
+  };
+
   // 將匿名帳戶連結到 Google 帳戶
   const linkAnonymousToGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -127,6 +144,7 @@ const App = () => {
         content,
         image,
         likes: 0,
+        likedBy: [], // 👈 確保這行存在！
         comments: [],
         tags: content.match(/#\w+/g) || [],
         user: { id: auth.currentUser?.uid || Date.now(), name: userName, avatar: userAvatar },
@@ -181,16 +199,47 @@ const App = () => {
 
   const likePost = async (id) => {
     try {
+      if (!auth.currentUser) {
+        toast.error("You must be logged in to like posts");
+        return;
+      }
+  
+      const uid = auth.currentUser.uid;
       const postRef = doc(db, "posts", id);
       const post = posts.find((p) => p.id === id);
-      await updateDoc(postRef, { likes: post.likes + 1 });
-      toast("Liked!", { icon: "❤️" });
+  
+      if (!post) {
+        toast.error("Post not found");
+        return;
+      }
+  
+      const likedBy = post.likedBy || [];
+      let newLikedBy;
+      let newLikes;
+      
+      if (likedBy.includes(uid)) {
+        // 取消讚
+        newLikedBy = likedBy.filter(userId => userId !== uid);
+        newLikes = newLikedBy.length;
+      } else {
+        // 加讚
+        newLikedBy = [...likedBy, uid];
+        newLikes = newLikedBy.length;
+      }
+  
+      // 直接更新整個陣列，確保同步
+      await updateDoc(postRef, {
+        likes: newLikes,
+        likedBy: newLikedBy,
+      });
+      
+      toast(likedBy.includes(uid) ? "Unliked 💔" : "Liked ❤️");
+      
     } catch (error) {
       console.error("Error liking post:", error);
       toast.error("Failed to like post");
     }
   };
-
   const deletePost = async (id) => {
     try {
       await deleteDoc(doc(db, "posts", id));
@@ -282,7 +331,7 @@ const App = () => {
         </button>
         <button
           onClick={handleGoogleLogin}
-          className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-all flex items-center"
+          className="mb-4 bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-all flex items-center"
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path
@@ -291,6 +340,12 @@ const App = () => {
             />
           </svg>
           Login with Google
+        </button>
+        <button
+          onClick={handleDemoLogin}
+          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center"
+        >
+          Login as Demo User
         </button>
       </div>
     );
