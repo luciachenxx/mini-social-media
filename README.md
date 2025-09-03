@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+# Social Snap
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+一個現代化的即時社交媒體平台，使用 React、TypeScript 和 Firebase 構建。
 
-## Available Scripts
+## 專案特色
 
-In the project directory, you can run:
+- 🔐 多重身份驗證（Google OAuth、匿名登入、示範帳號）
+- ⚡ 即時資料同步與更新
+- 💬 三層嵌套留言回覆系統
+- ❤️ 智慧按讚功能與用戶追蹤
+- 🌙 深色/淺色主題切換
+- 📱 完全響應式設計
+- 🎨 流暢的動畫效果
 
-### `npm start`
+## 技術棧
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 前端
+- **React 19** - 現代化 UI 框架
+- **TypeScript** - 型別安全的 JavaScript
+- **Tailwind CSS** - 實用優先的 CSS 框架
+- **Framer Motion** - 動畫庫
+- **React Hot Toast** - 通知系統
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 後端服務
+- **Firebase Authentication** - 用戶認證
+- **Firebase Firestore** - NoSQL 資料庫
+- **Firebase Security Rules** - 資料安全控制
 
-### `npm test`
+### 開發工具
+- **Create React App** - 專案建置工具
+- **ESLint** - 程式碼品質檢查
+- **npm** - 套件管理
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 功能展示
 
-### `npm run build`
+### 身份驗證
+- Google OAuth 一鍵登入
+- 匿名訪客模式
+- 帳號連結功能
+- 示範帳號快速體驗
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 社交功能
+- 發佈文字和圖片貼文
+- 即時按讚/取消按讚
+- 多層級留言系統
+- @用戶提及功能
+- #標籤分類
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 用戶體驗
+- 即時資料更新（無需重新整理）
+- 深色模式支援
+- 響應式設計（桌面/平板/手機）
+- 流暢的頁面轉場動畫
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 快速開始
 
-### `npm run eject`
+### 環境需求
+- Node.js 16.0 或更高版本
+- npm 或 yarn
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 安裝步驟
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **複製專案**
+```bash
+git clone https://github.com/your-username/social-snap.git
+cd social-snap
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2. **安裝相依套件**
+```bash
+npm install
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. **設定 Firebase**
+   - 在 [Firebase Console](https://console.firebase.google.com/) 建立新專案
+   - 啟用 Authentication 和 Firestore Database
+   - 複製 Firebase 配置到 `src/services/firebase.js`
 
-## Learn More
+4. **啟動開發伺服器**
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+5. **開啟瀏覽器訪問** `http://localhost:3000`
