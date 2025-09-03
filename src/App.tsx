@@ -15,7 +15,6 @@ import {
   signInAnonymously,
   signInWithPopup,
   GoogleAuthProvider,
-  linkWithPopup,
   signOut,
   updateProfile,
   signInWithEmailAndPassword,
@@ -174,21 +173,21 @@ const App: React.FC = () => {
   };
 
   // 將匿名帳戶連結到 Google 帳戶
-  const linkAnonymousToGoogle = async (): Promise<void> => {
-    if (!auth.currentUser) return;
+  // const linkAnonymousToGoogle = async (): Promise<void> => {
+  //   if (!auth.currentUser) return;
     
-    const provider = new GoogleAuthProvider();
-    try {
-      setLoading(true);
-      await linkWithPopup(auth.currentUser, provider);
-      toast.success("Account linked to Google!");
-    } catch (error) {
-      console.error("Error linking account:", error);
-      toast.error("Failed to link account");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   const provider = new GoogleAuthProvider();
+  //   try {
+  //     setLoading(true);
+  //     await linkWithPopup(auth.currentUser, provider);
+  //     toast.success("Account linked to Google!");
+  //   } catch (error) {
+  //     console.error("Error linking account:", error);
+  //     toast.error("Failed to link account");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const addPost = async (content: string, image: string | null): Promise<void> => {
     if (!auth.currentUser) {
@@ -404,6 +403,27 @@ const App: React.FC = () => {
       post.tags?.some((tag) => tag?.toLowerCase().includes(search.toLowerCase()))
   );
 
+  const deleteComment = async (postId: string, commentIdx: number): Promise<void> => {
+    try {
+      const postRef = doc(db, "posts", postId);
+      const post = posts.find((p) => p.id === postId);
+      
+      if (!post) {
+        toast.error("Post not found");
+        return;
+      }
+  
+      const updatedComments = post.comments.filter((_, idx) => idx !== commentIdx);
+      
+      await updateDoc(postRef, { comments: updatedComments });
+      toast("Comment deleted", { icon: "🗑️" });
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      toast.error("Failed to delete comment");
+    }
+  };
+  
+
   // Loading 狀態
   if (loading) {
     return (
@@ -519,14 +539,14 @@ const App: React.FC = () => {
           
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10 overflow-hidden">
-              {auth.currentUser?.isAnonymous && (
+              {/* {auth.currentUser?.isAnonymous && (
                 <button
                   onClick={linkAnonymousToGoogle}
                   className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-teal-100 transition-all duration-200"
                 >
                   🔗 Link to Google
                 </button>
-              )}
+              )} */}
               <button
                 onClick={() => {
                   setModalOpen(true);
@@ -573,22 +593,35 @@ const App: React.FC = () => {
         placeholder="Search posts or #tags..."
         className={`w-full p-3 mb-6 border rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-teal-400 transition-all ${
           isDark ? "bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-400" 
-                 : "bg-white border-teal-200 text-gray-700 placeholder-gray-500"
+            : "bg-white border-teal-200 text-gray-700 placeholder-gray-500"
         }`}
       />
       
       {/* 發文表單 */}
-      <PostForm onPost={addPost} isDark={isDark} />
-      
+      {!auth.currentUser?.isAnonymous && <PostForm onPost={addPost} isDark={isDark} />}
+
+      {/* 匿名用戶提示 */}
+      {auth.currentUser?.isAnonymous && (
+        <div className={`p-4 mb-6 rounded-lg border-2 border-dashed ${
+          isDark ? "bg-gray-700 border-gray-600 text-gray-300" : "bg-yellow-50 border-yellow-300 text-yellow-700"
+        }`}>
+          <p className="text-center">
+            👤 You are browsing as a guest. Please login to post, like, and comment.
+          </p>
+        </div>
+      )}
+
+
       {/* 貼文列表 */}
       <PostList
         posts={filteredPosts}
-        onLike={likePost}
-        onComment={addComment}
-        onReply={addReply}
-        onDelete={deletePost}
-        onEdit={editPost}
+        onLike={auth.currentUser?.isAnonymous ? () => toast.error("Please login to like posts") : likePost}
+        onComment={auth.currentUser?.isAnonymous ? () => toast.error("Please login to comment") : addComment}
+        onReply={auth.currentUser?.isAnonymous ? () => toast.error("Please login to reply") : addReply}
+        onDelete={auth.currentUser?.isAnonymous ? () => toast.error("Please login to delete posts") : deletePost}
+        onEdit={auth.currentUser?.isAnonymous ? () => toast.error("Please login to edit posts") : editPost}
         isDark={isDark}
+        onDeleteComment={deleteComment}
       />
     </div>
   );

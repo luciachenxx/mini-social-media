@@ -1,5 +1,6 @@
 import React, { useState, FormEvent, DragEvent, ChangeEvent } from 'react';
 import { motion } from 'framer-motion';
+import {  auth } from "../services/firebase";
 
 interface PostFormProps {
   onPost: (content: string, image: string | null) => void;
@@ -117,7 +118,7 @@ const PostForm: React.FC<PostFormProps> = ({ onPost, isDark }) => {
         </div>
         <button
           type="submit"
-          disabled={!content.trim() && !image}
+          disabled={(!content.trim() && !image) || auth.currentUser?.isAnonymous}
           className="bg-gradient-to-r from-teal-500 to-indigo-500 text-white px-6 py-2 rounded-full hover:from-teal-600 hover:to-indigo-600 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 shadow-md"
         >
           Share
