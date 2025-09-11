@@ -41,6 +41,7 @@ interface PostListProps {
   onEdit: (id: string, content: string) => void;
   isDark: boolean;
   onDeleteComment: (postId: string, commentIdx: number) => void;
+  onDeleteReply: (postId: string, commentIdx: number, replyIdx: number) => void;
 }
 
 const PostList: React.FC<PostListProps> = ({ 
@@ -52,6 +53,7 @@ const PostList: React.FC<PostListProps> = ({
   onEdit, 
   isDark,
   onDeleteComment,
+  onDeleteReply
 }) => {
   return (
     <div className="space-y-6">
@@ -66,6 +68,7 @@ const PostList: React.FC<PostListProps> = ({
           onEdit={onEdit}
           isDark={isDark}
           onDeleteComment={onDeleteComment}
+          onDeleteReply={onDeleteReply}
         />
       ))}
     </div>

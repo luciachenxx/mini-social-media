@@ -424,6 +424,28 @@ const App: React.FC = () => {
       toast.error("Failed to delete comment");
     }
   };
+
+  const deleteReply = async (postId: string, commentIdx: number, replyIdx: number): Promise<void> => {
+    try {
+      const postRef = doc(db, "posts", postId);
+      const post = posts.find((p) => p.id === postId);
+      
+      if (!post || !post.comments[commentIdx]) {
+        toast.error("Comment not found");
+        return;
+      }
+  
+      const updatedComments = [...post.comments];
+      const replies = updatedComments[commentIdx].replies || [];
+      updatedComments[commentIdx].replies = replies.filter((_, idx) => idx !== replyIdx);
+      
+      await updateDoc(postRef, { comments: updatedComments });
+      toast("Reply deleted", { icon: "🗑️" });
+    } catch (error) {
+      console.error("Error deleting reply:", error);
+      toast.error("Failed to delete reply");
+    }
+  };
   
 
   // Loading 狀態
@@ -624,6 +646,7 @@ const App: React.FC = () => {
         onEdit={auth.currentUser?.isAnonymous ? () => toast.error("Please login to edit posts") : editPost}
         isDark={isDark}
         onDeleteComment={deleteComment}
+        onDeleteReply={deleteReply} 
       />
     </div>
   );
