@@ -236,6 +236,7 @@ const PostCard: React.FC<PostCardProps> = ({
             </div>
           )}
           <span className="font-semibold text-lg">{post.user.name}</span>
+          <span>{transferTimestamp(post.timestamp)}</span>  
         </div>
 
         {/* 編輯模式或顯示內容 */}
@@ -456,7 +457,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             {transferTimestamp(reply.timestamp)}
                           </span>
                           {/* 回覆刪除按鈕 */}
-                          {currentUserId === reply.user.id && !auth.currentUser?.isAnonymous && onDeleteReply && (
+                          {currentUserId === reply.user.id && !auth.currentUser?.isAnonymous && (
                             <button
                               onClick={() => handleDeleteReply(idx, rIdx)}
                               className="text-red-400 hover:text-red-600 transition-colors ml-2"

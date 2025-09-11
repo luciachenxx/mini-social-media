@@ -9,6 +9,8 @@ import {
   doc,
   updateDoc,
   deleteDoc,
+  query,
+  orderBy,
   Unsubscribe,
 } from "firebase/firestore";
 import {
@@ -86,7 +88,7 @@ const App: React.FC = () => {
 
         // 只有在用戶登入後才開始監聽 Firestore
         unsubscribePosts = onSnapshot(
-          collection(db, "posts"),
+          query(collection(db, "posts"), orderBy("timestamp", "desc")),
           (snapshot) => {
             const postsData = snapshot.docs.map((doc) => ({ 
               id: doc.id, 
